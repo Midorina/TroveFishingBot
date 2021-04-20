@@ -1,4 +1,5 @@
 import logging
+import time
 from typing import Optional
 
 from key_manager import Presser
@@ -50,10 +51,11 @@ class Bot:
             if self.announced_thrown_liquid_type is False:
                 logging.info(f"Thrown into {liquid}. Waiting to catch a fish...")
                 self.announced_thrown_liquid_type = True
-            Presser.not_precise_sleep(0.3, interval=0.1)
+
+            time.sleep(0.2)
             return
 
-        Presser.not_precise_sleep(0.1, interval=0.05)
+        Presser.human_sleep(0.1, interval=0.02)
 
         self.trove.focus()
         # TODO: find a way to send inputs without focusing (trove.send_input('f'))
@@ -65,7 +67,7 @@ class Bot:
         )
         self.trove.focus_back_to_last_window()
 
-        Presser.not_precise_sleep(1.6, interval=0.10)
+        Presser.human_sleep(1.6, interval=0.10)
 
     def start(self):
         script = Presser(self.bot_loop)

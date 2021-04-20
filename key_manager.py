@@ -69,7 +69,7 @@ class Presser:
         if precise is True:
             sleep = time.sleep
         else:
-            sleep = Presser.not_precise_sleep
+            sleep = Presser.human_sleep
 
         sleep(sleep_before)
         keyboard.press(button)
@@ -78,7 +78,7 @@ class Presser:
         sleep(sleep_after)
 
     @staticmethod
-    def not_precise_sleep(length: float, interval: float = None):
+    def human_sleep(length: float, interval: float = None):
         # 10% inconsistency
         interval = interval or length / 10
         time.sleep(random.uniform(length - interval, length + interval))
