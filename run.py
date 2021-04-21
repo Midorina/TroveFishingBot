@@ -5,7 +5,7 @@ import time
 from bot import Bot
 from process_memory_manager import Process
 
-logging.basicConfig(format='[%(asctime)s] %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
+logging.basicConfig(format='[%(asctime)s.%(msecs)03d] %(message)s', datefmt='%d-%m-%Y %H:%M:%S', level=logging.DEBUG)
 
 while True:
     try:
