@@ -1,5 +1,6 @@
 import ctypes
 import logging
+import time
 from typing import List
 
 import psutil
@@ -128,7 +129,19 @@ class Process:
         if self.__last_window_handle != self.window_handle:
             # send an alt key first to make this work
             key_manager.Presser.press_and_release('alt', sleep_between=0)
-            win32gui.SetForegroundWindow(self.window_handle)
+
+            exc = None
+            # try 2 times
+            for _ in range(2):
+                try:
+                    win32gui.SetForegroundWindow(self.window_handle)
+                except Exception as e:
+                    exc = e
+                    time.sleep(0.1)
+                else:
+                    return
+
+            raise exc
 
     def focus_back_to_last_window(self):
         if self.__last_window_handle != self.window_handle:
