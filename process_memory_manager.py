@@ -146,7 +146,10 @@ class Process:
     def focus_back_to_last_window(self):
         if self.__last_window_handle != self.window_handle:
             key_manager.Presser.press_and_release('alt', sleep_between=0)
-            win32gui.SetForegroundWindow(self.__last_window_handle)
+            try:
+                win32gui.SetForegroundWindow(self.__last_window_handle)
+            except:
+                pass
 
     @staticmethod
     def kill_by_name(names: List[str]):
