@@ -24,11 +24,11 @@ class Presser:
         keyboard.add_hotkey(pause_key, lambda: self.pause_or_resume())
 
     def pause_or_resume(self):
-        self.paused = not self.paused
-        if self.paused is True:
+        if self.paused is False:
             logging.info("Pausing...")
         else:
             logging.info("Resuming...")
+        self.paused = not self.paused
 
     def exit(self):
         logging.info("Exiting...")
@@ -49,7 +49,7 @@ class Presser:
                 return
 
     def start(self):
-        logging.info(f'Starting in 5 seconds. Press {self.pause_key} to pause/resume and "{self.quit_key}" to exit.')
+        logging.info(f'Starting in 5 seconds. Press "{self.pause_key}" to pause/resume and "{self.quit_key}" to exit.')
         time.sleep(5.0)
 
         self.main_loop_thread = Thread(target=self.main_loop)
