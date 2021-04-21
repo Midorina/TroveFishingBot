@@ -11,9 +11,13 @@ while True:
     try:
         Bot().start()
     except Exception as e:
-        logging.error(e)
+        logging.debug("Ignoring exception:", exc_info=True)
+
         # if game/Steam crashes, or the character is stuck in throwing animation, or Trove isn't found
-        logging.warning("Killing Trove and Steam...")
+        logging.error(str(e))
+        logging.warning("Killing Trove and Steam in 5 seconds...")
+        time.sleep(5.0)
+
         Process.kill_by_name(['Trove.exe', 'GlyphClientApp.exe', 'GlyphCrashHandler64.exe',
                               'steam.exe', 'SteamService.exe', 'steamwebhelper.exe'])
 

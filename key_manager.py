@@ -49,8 +49,8 @@ class Presser:
                 return
 
     def start(self):
-        logging.info(f'Starting in 5 seconds. Press "{self.pause_key}" to pause/resume and "{self.quit_key}" to exit.')
-        time.sleep(5.0)
+        logging.info(f'Starting in 3 seconds. Press "{self.pause_key}" to pause/resume and "{self.quit_key}" to exit.')
+        time.sleep(3.0)
 
         self.main_loop_thread = Thread(target=self.main_loop)
         self.main_loop_thread.start()
