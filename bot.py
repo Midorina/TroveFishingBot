@@ -67,7 +67,7 @@ class Bot:
         )
         self.trove.focus_back_to_last_window()
 
-        Presser.human_sleep(1.6, interval=0.10)
+        Presser.human_sleep(1.65, interval=0.10)
 
     def start(self):
         script = Presser(self.bot_loop)
