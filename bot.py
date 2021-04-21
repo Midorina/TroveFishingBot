@@ -63,11 +63,11 @@ class Bot:
             'f',
             # wait longer as more attempts are being made to avoid the bug
             # where your pole is thrown into the air
-            sleep_between=0 + (((self.throw_attempts or 1) - 1) * 0.015)
+            sleep_between=0 + (((self.throw_attempts or 1) - 1) * 0.01)
         )
         self.trove.focus_back_to_last_window()
 
-        Presser.human_sleep(1.65, interval=0.10)
+        Presser.human_sleep(1.6, interval=0.07)
 
     def start(self):
         script = Presser(self.bot_loop)
