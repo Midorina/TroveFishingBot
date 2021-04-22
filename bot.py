@@ -2,8 +2,8 @@ import logging
 import time
 from typing import Optional
 
-from key_manager import Presser
-from memory_models import Liquid
+from manager import Manager
+from liquid_model import Liquid
 from process_memory_manager import Process
 
 
@@ -55,20 +55,12 @@ class Bot:
             time.sleep(0.2)
             return
 
-        Presser.human_sleep(0.1, interval=0.02)
+        Manager.human_sleep(0.1, interval=0.02)
 
-        self.trove.focus()
-        # TODO: find a way to send inputs without focusing (trove.send_input('f'))
-        Presser.press_and_release(
-            'f',
-            # wait longer as more attempts are being made to avoid the bug
-            # where your pole is thrown into the air
-            sleep_between=0 + (((self.throw_attempts or 1) - 1) * 0.01)
-        )
-        self.trove.focus_back_to_last_window()
+        self.trove.send_input('f', sleep_between=0.05)
 
-        Presser.human_sleep(1.6, interval=0.07)
+        Manager.human_sleep(1.6, interval=0.07)
 
     def start(self):
-        script = Presser(self.bot_loop)
+        script = Manager(self.bot_loop)
         script.start()

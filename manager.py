@@ -7,7 +7,7 @@ from threading import Thread
 import keyboard
 
 
-class Presser:
+class Manager:
     def __init__(self, func: callable, quit_key: str = 'ctrl+q', pause_key: str = 'ctrl+p'):
         self.main_loop_thread = None
         self.main_loop_thread_exc = None
@@ -69,7 +69,7 @@ class Presser:
         if precise is True:
             sleep = time.sleep
         else:
-            sleep = Presser.human_sleep
+            sleep = Manager.human_sleep
 
         sleep(sleep_before)
         keyboard.press(button)

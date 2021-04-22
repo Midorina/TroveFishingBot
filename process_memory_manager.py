@@ -10,7 +10,7 @@ import win32con
 import win32gui
 import win32process
 
-import key_manager
+from manager import Manager
 
 
 class Process:
@@ -110,8 +110,8 @@ class Process:
             # try 2 times
             for _ in range(2):
                 try:
-                    # send an alt key first to make this work
-                    key_manager.Presser.press_and_release('alt', sleep_between=0)
+                    # for some reason this doesn't work without sending an alt key first
+                    Manager.press_and_release('alt', sleep_between=0)
                     win32gui.SetForegroundWindow(self.window_handle)
 
                 except Exception as e:
@@ -127,7 +127,7 @@ class Process:
 
     def focus_back_to_last_window(self):
         if self.__last_window_handle != self.window_handle:
-            key_manager.Presser.press_and_release('alt', sleep_between=0)
+            Manager.press_and_release('alt', sleep_between=0)
             try:
                 win32gui.SetForegroundWindow(self.__last_window_handle)
             except:
@@ -146,28 +146,26 @@ class Process:
                 except psutil.NoSuchProcess:
                     pass
 
+    @staticmethod
+    def char2key(c):
+        # https://msdn.microsoft.com/en-us/library/windows/desktop/ms646329(v=vs.85).aspx
+        result = ctypes.windll.User32.VkKeyScanW(ord(c))
+        # shift_state = (result & 0xFF00) >> 8
+        vk_key = result & 0xFF
+
+        return vk_key
+
+    def send_input(self, key: str, sleep_between: float = 0):
+        """Send a key input straight to the process. This took me a lot of time, but it was worth it."""
+        vk = self.char2key(key)
+
+        l_param = win32api.MapVirtualKey(vk, 0) << 16
+
+        win32api.PostMessage(self.window_handle, win32con.WM_KEYDOWN, vk, l_param | 0x00000001)
+        time.sleep(sleep_between)
+        win32api.PostMessage(self.window_handle, win32con.WM_KEYUP, vk, l_param | 0x20000001)
+
     def __del__(self):
         if self.process_handle:
             # close the handle
             ctypes.windll.kernel32.CloseHandle(self.process_handle)
-
-    # def _window_enum_handler(self, window_handle, process_name):
-    #     if win32gui.GetWindowText(window_handle).casefold() == process_name:
-    #         self._window_handle = window_handle
-
-    # @staticmethod
-    # def char2key(c):
-    #     # https://msdn.microsoft.com/en-us/library/windows/desktop/ms646329(v=vs.85).aspx
-    #     result = ctypes.windll.User32.VkKeyScanW(ord(unicode(c)))
-    #     shift_state = (result & 0xFF00) >> 8
-    #     vk_key = result & 0xFF
-    #
-    #     return vk_key
-    #
-    # def send_input(self, key: str):
-    #     win32api.SendMessage(self.window_handle, win32con.WM_CHAR, ord(key), 0)
-    #
-    #     ret1 = win32api.PostMessage(self.window_handle, win32con.WM_KEYDOWN, ord(key), 0)
-    #     ret2 = win32api.PostMessage(self.window_handle, win32con.WM_KEYUP, ord(key), 0)
-    #
-    #     print("ret1 and ret2:", ret1, ret2)
