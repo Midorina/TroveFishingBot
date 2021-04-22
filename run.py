@@ -2,8 +2,8 @@ import logging
 import subprocess
 import time
 
-from bot import Bot
-from process_memory_manager import Process
+from internals.bot import Bot
+from managers.process_memory_manager import Process
 
 logging.basicConfig(format='[%(asctime)s.%(msecs)03d] %(message)s', datefmt='%d-%m-%Y %H:%M:%S', level=logging.INFO)
 

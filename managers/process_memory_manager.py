@@ -10,7 +10,7 @@ import win32con
 import win32gui
 import win32process
 
-from manager import Manager
+from managers.loop_manager import Manager
 
 
 class Process:

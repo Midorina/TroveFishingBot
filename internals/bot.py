@@ -2,9 +2,9 @@ import logging
 import time
 from typing import Optional
 
-from manager import Manager
-from liquid_model import Liquid
-from process_memory_manager import Process
+from managers.loop_manager import Manager
+from internals.liquid import Liquid
+from managers.process_memory_manager import Process
 
 
 class Bot:
