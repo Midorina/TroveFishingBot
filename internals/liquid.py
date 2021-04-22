@@ -4,7 +4,7 @@ from typing import List
 
 from managers.process_memory_manager import Process
 
-with open('memory_settings.json', 'r') as f:
+with open('internals/memory_settings.json', 'r') as f:
     config = json.load(f)
 
 
