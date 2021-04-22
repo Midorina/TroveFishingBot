@@ -24,17 +24,20 @@ class Process:
 
     @functools.cached_property
     def process_handle(self):
+        """We don't use the handle we got while getting the process by name,
+        because that handle contains sub modules,
+        which we don't want while reading the memory."""
         return ctypes.windll.kernel32.OpenProcess(win32con.PROCESS_VM_READ, False, self.process_id)
 
     @functools.cached_property
     def window_handle(self):
+        """To focus, and send inputs"""
         title = self.process_name.split('.')[0].title()
         return win32gui.FindWindow(None, title)
 
     @classmethod
     def get_by_name(cls, process_name: str) -> "Process":
-        """Finds the process id of the given
-        process name and returns the process id and its base address."""
+        """Finds a process by name and returns a Process object."""
 
         for process_id in win32process.EnumProcesses():
             # If process_id is the same as this program, skip it
@@ -67,8 +70,8 @@ class Process:
         raise Exception(f"{process_name} could not be found.")
 
     def read_memory(self, address, offsets: List = None):
-        """Read a process' memory based on its process id, address and offsets.
-        Returns the address without offsets and the value."""
+        """Reads memory using a base_address and a list of offsets (optional).
+        Returns a pointer and a value."""
 
         # Pointer to the data want to read
         data = ctypes.c_uint(0)
@@ -103,10 +106,12 @@ class Process:
         return current_address, data.value
 
     def focus(self):
+        """Focuses on the process window."""
         self.__last_window_handle = win32gui.GetForegroundWindow()
 
         if self.__last_window_handle != self.window_handle:
             exc = None
+
             # try 2 times
             for _ in range(2):
                 try:
@@ -126,15 +131,21 @@ class Process:
             raise exc
 
     def focus_back_to_last_window(self):
+        """Focuses back to the last window that was active before focusing on our process."""
         if self.__last_window_handle != self.window_handle:
+
+            # SetForegroundWindow doesn't work without sending 'alt' first
             Manager.press_and_release('alt', sleep_between=0)
+
             try:
                 win32gui.SetForegroundWindow(self.__last_window_handle)
             except:
+                # if we couldn't focus back, its fine, just ignore
                 pass
 
     @staticmethod
     def kill_by_name(names: List[str]):
+        """Kill every process by specified list of names."""
         names = list(map(lambda x: x.casefold(), names))
 
         for proc in psutil.process_iter():
@@ -148,24 +159,31 @@ class Process:
 
     @staticmethod
     def char2key(c):
-        # https://msdn.microsoft.com/en-us/library/windows/desktop/ms646329(v=vs.85).aspx
+        """Converts a key to a Windows Virtual Key code."""
+
+        # https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-vkkeyscanw
         result = ctypes.windll.User32.VkKeyScanW(ord(c))
+
         # shift_state = (result & 0xFF00) >> 8
         vk_key = result & 0xFF
 
         return vk_key
 
     def send_input(self, key: str, sleep_between: float = 0):
-        """Send a key input straight to the process. This took me a lot of time, but it was worth it."""
+        """Sends a key input straight to the process. This took me a lot of time, but it was worth it."""
+
+        # get the virtual key code
         vk = self.char2key(key)
 
+        # compute the lParam
         l_param = win32api.MapVirtualKey(vk, 0) << 16
 
+        # send the input
         win32api.PostMessage(self.window_handle, win32con.WM_KEYDOWN, vk, l_param | 0x00000001)
         time.sleep(sleep_between)
         win32api.PostMessage(self.window_handle, win32con.WM_KEYUP, vk, l_param | 0x20000001)
 
     def __del__(self):
+        """Close the handle when our object gets garbage collected."""
         if self.process_handle:
-            # close the handle
             ctypes.windll.kernel32.CloseHandle(self.process_handle)
