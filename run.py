@@ -25,7 +25,7 @@ while True:
         # "Auto Launch Game On Start" needs to be enabled in order for this to work.
         subprocess.run("start steam://run/304050", shell=True)
 
-        time.sleep(30.0)
+        time.sleep(60.0)
     else:
         # if exited without errors, break the loop
         break
