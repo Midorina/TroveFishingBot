@@ -2,7 +2,7 @@
 import logging
 import random
 import time
-from threading import Thread
+from threading import Thread, Event
 
 import keyboard
 
@@ -12,39 +12,56 @@ class Manager:
         self.main_loop_thread = None
         self.main_loop_thread_exc = None
 
-        self.paused = False
-        self._exit = False
-
         self.func = func
 
         self.quit_key = quit_key
         self.pause_key = pause_key
 
+        self.pause = Event()
+        self._exit = False
+
+        # remove previous hotkeys to prevent multiple of those in case of a restart
+        try:
+            keyboard.unhook_all_hotkeys()
+        except AttributeError:
+            pass
+
         keyboard.add_hotkey(quit_key, lambda: self.exit())
         keyboard.add_hotkey(pause_key, lambda: self.pause_or_resume())
 
+        # start
+        self.pause.set()
+
     def pause_or_resume(self):
-        if self.paused is False:
+        if self.pause.is_set() is True:
             logging.info("Pausing...")
+            self.pause.clear()
         else:
             logging.info("Resuming...")
-        self.paused = not self.paused
+            self.pause.set()
 
     def exit(self):
         logging.info("Exiting...")
         self._exit = True
 
+        # unlock the pause event so that the main loop can exit
+        self.pause.set()
+
     def main_loop(self):
         while True:
+            # wait if we're paused
+            if self.pause.is_set() is False:
+                self.pause.wait()
+
+            # exit if "self._exit" is true
             if self._exit is True:
                 return
 
-            if self.paused is True:
-                keyboard.wait(self.pause_key)
-
             try:
+                # execute the function
                 self.func()
             except Exception as e:
+                # if it raised an error, save it and return
                 self.main_loop_thread_exc = e
                 return
 
