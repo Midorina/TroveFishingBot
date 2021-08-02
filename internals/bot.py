@@ -31,6 +31,7 @@ class Bot:
         if not liquid:
             logging.info("Throwing the pole...")
 
+            self.announced_thrown_liquid_type = False
             # inspect attempt counter
             if self.throw_attempts > 15:
                 raise Exception(
