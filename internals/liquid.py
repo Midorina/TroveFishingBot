@@ -1,21 +1,30 @@
 import functools
 import json
+import os
+import sys
 from typing import List
 
 from managers.process_memory_manager import Process
 
-with open('internals/memory_settings.json', 'r') as f:
-    config = json.load(f)
+
+def resource_path(relative_path):
+    """ Get absolute path to resource for PyInstaller """
+    base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+
+    return os.path.join(base_path, relative_path)
 
 
 class Liquid:
     TYPES = ['water', 'chocolate', 'lava', 'plasma']
 
+    with open(resource_path('internals/memory_settings.json'), 'r') as f:
+        CONFIG = json.load(f)
+
     def __init__(self, trove: Process, name: str, caught_fish_offsets: List, pole_in_liquid_offsets: List):
         self.trove = trove
         self.name = name
 
-        self.base_address = self.trove.base_address + int(config['base'], 16)
+        self.base_address = self.trove.base_address + int(self.CONFIG['base'], 16)
 
         self.caught_fish_offsets = caught_fish_offsets
         self.pole_in_liquid_offsets = pole_in_liquid_offsets
@@ -45,8 +54,8 @@ class Liquid:
         ret = []
         for liquid_type in Liquid.TYPES:
             ret.append(cls(trove, name=liquid_type,
-                           caught_fish_offsets=config['caught_fish_offsets'][liquid_type],
-                           pole_in_liquid_offsets=config['pole_in_liquid_offsets'][liquid_type]))
+                           caught_fish_offsets=cls.CONFIG['caught_fish_offsets'][liquid_type],
+                           pole_in_liquid_offsets=cls.CONFIG['pole_in_liquid_offsets'][liquid_type]))
         return ret
 
     def __str__(self):
