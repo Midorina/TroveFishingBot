@@ -1,7 +1,7 @@
 # TroveFishingBot
 An advanced Trove Fishing bot that works in the background, written in Python.
 
-# *Post a comment to [this issue](https://github.com/Midorina/TroveFishingBot/issues/1#issuecomment-877512827) if you want me to update the base memory address.*
+# *Post a comment to [this issue](https://github.com/Midorina/TroveFishingBot/issues/1#issuecomment-877512827) if there is an update and bot no longer works.*
 
 ## Features
 - It supports fishing in every kind of liquid (Water, Plasma, Lava, Chocolate)
