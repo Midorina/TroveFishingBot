@@ -5,27 +5,33 @@ import time
 from internals.bot import Bot
 from managers.process_memory_manager import Process
 
-logging.basicConfig(format='[%(asctime)s.%(msecs)03d] %(message)s', datefmt='%d-%m-%Y %H:%M:%S', level=logging.INFO)
 
-while True:
-    try:
-        Bot().start()
-    except Exception as e:
-        logging.debug("Ignoring exception:", exc_info=True)
+def main():
+    logging.basicConfig(format='[%(asctime)s.%(msecs)03d] %(message)s', datefmt='%d-%m-%Y %H:%M:%S', level=logging.INFO)
 
-        # if game/Steam crashes, or the character is stuck in throwing animation, or Trove isn't found
-        logging.error(str(e))
-        logging.warning("Killing Trove and Steam in 5 seconds...")
-        time.sleep(5.0)
+    while True:
+        try:
+            Bot().start()
+        except Exception as e:
+            logging.debug("Ignoring exception:", exc_info=True)
 
-        Process.kill_by_name(['Trove.exe', 'GlyphClientApp.exe', 'GlyphCrashHandler64.exe',
-                              'steam.exe', 'SteamService.exe', 'steamwebhelper.exe'])
+            # if game/Steam crashes, or the character is stuck in throwing animation, or Trove isn't found
+            logging.error(str(e))
+            logging.warning("Killing Trove and Steam in 5 seconds...")
+            time.sleep(5.0)
 
-        logging.warning("Re-launching...")
-        # "Auto Launch Game On Start" needs to be enabled in order for this to work.
-        subprocess.run("start steam://run/304050", shell=True)
+            Process.kill_by_name(['Trove.exe', 'GlyphClientApp.exe', 'GlyphCrashHandler64.exe',
+                                  'steam.exe', 'SteamService.exe', 'steamwebhelper.exe'])
 
-        time.sleep(60.0)
-    else:
-        # if exited without errors, break the loop
-        break
+            logging.warning("Re-launching... I will wait 60 seconds for the game to launch.")
+            # "Auto Launch Game On Start" needs to be enabled in order for this to work.
+            subprocess.run("start steam://run/304050", shell=True)
+
+            time.sleep(60.0)
+        else:
+            # if exited without errors, break the loop
+            break
+
+
+if __name__ == "__main__":
+    main()
