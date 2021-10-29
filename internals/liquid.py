@@ -17,7 +17,7 @@ def resource_path(relative_path):
 class Liquid:
     TYPES = ['water', 'chocolate', 'lava', 'plasma']
 
-    with open(resource_path('internals/memory_settings.json'), 'r') as f:
+    with open(resource_path('memory_settings.json'), 'r') as f:
         CONFIG = json.load(f)
 
     def __init__(self, trove: Process, name: str, caught_fish_offsets: List, pole_in_liquid_offsets: List):

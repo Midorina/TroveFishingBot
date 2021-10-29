@@ -2,7 +2,7 @@
 import logging
 import random
 import time
-from threading import Thread, Event
+from threading import Event, Thread
 
 import keyboard
 
@@ -66,7 +66,7 @@ class Manager:
                 return
 
     def start(self):
-        logging.info(f'Starting in 3 seconds. Press "{self.pause_key}" to pause/resume and "{self.quit_key}" to exit.')
+        logging.info(f'Starting in 3 seconds. Press "{self.pause_key}" to pause/resume, or "{self.quit_key}" to exit.')
         time.sleep(3.0)
 
         self.main_loop_thread = Thread(target=self.main_loop)

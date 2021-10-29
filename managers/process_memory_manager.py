@@ -38,7 +38,6 @@ class Process:
     @classmethod
     def get_by_name(cls, process_name: str) -> "Process":
         """Finds a process by name and returns a Process object."""
-
         for process_id in win32process.EnumProcesses():
             # If process_id is the same as this program, skip it
             if process_id == -1:
