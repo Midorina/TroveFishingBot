@@ -1,5 +1,5 @@
 {
-  "base"                  : "0x0FCF2CC",
+  "base"                  : "0x00FAA884",
   "caught_fish_offsets"   : {
     "water"    : ["0x68", "0xE4", "0x3C4"],
     "chocolate": ["0x68", "0xE4", "0x62C"],
