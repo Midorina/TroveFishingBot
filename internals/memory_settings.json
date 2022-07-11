@@ -1,15 +1,43 @@
 {
-  "base"                  : "0x00FAB834",
-  "caught_fish_offsets"   : {
-    "water"    : ["0x68", "0xE4", "0x3C4"],
-    "chocolate": ["0x68", "0xE4", "0x62C"],
-    "lava"     : ["0x68", "0xE4", "0x898"],
-    "plasma"   : ["0x68", "0xE4", "0xB00"]
+  "base": "0x01117CCC",
+  "caught_fish_offsets": {
+    "water": [
+      "0x68",
+      "0xE4",
+      "0x3C4"
+    ],
+    "chocolate": [
+      "0x68",
+      "0xE4",
+      "0x62C"
+    ],
+    "lava": [
+      "0x68",
+      "0xE4",
+      "0x898"
+    ],
+    "plasma": [
+      "0x68",
+      "0xE4",
+      "0xB00"
+    ]
   },
   "pole_in_liquid_offsets": {
-    "water"    : ["0x68", "0xF4", "0xBA0"],
-    "chocolate": ["0x68", "0xF4", "0xE08"],
-    "lava"     : ["0x68", "0xF4", "0x938"],
+    "water": [
+      "0x68",
+      "0xF4",
+      "0xBA0"
+    ],
+    "chocolate": [
+      "0x68",
+      "0xF4",
+      "0xE08"
+    ],
+    "lava": [
+      "0x68",
+      "0xF4",
+      "0x938"
+    ],
     "plasma"   : ["0x68", "0xF4", "0x6CC"]
   }
 }
