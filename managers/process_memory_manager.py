@@ -52,15 +52,17 @@ class Process:
                 continue
             else:
                 # iterate over an array of base addresses of each module
-                for base_address in win32process.EnumProcessModules(handle):
-                    # Get the name of the module
-                    current_name = str(win32process.GetModuleFileNameEx(handle, base_address))
+                try:
+                    for base_address in win32process.EnumProcessModules(handle):
+                        # Get the name of the module
+                        current_name = str(win32process.GetModuleFileNameEx(handle, base_address))
 
-                    # compare it
-                    if process_name.casefold() in current_name.casefold():
-                        logging.debug(f"Base address of {process_name} ({process_id}): {hex(base_address)}")
-                        return cls(process_id, process_name, base_address)
-
+                        # compare it
+                        if process_name.casefold() in current_name.casefold():
+                            logging.debug(f"Base address of {process_name} ({process_id}): {hex(base_address)}")
+                            return cls(process_id, process_name, base_address)
+                except:
+                    continue
             finally:
                 if handle:
                     # close the handle as we don't need it anymore

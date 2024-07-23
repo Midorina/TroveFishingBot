@@ -14,6 +14,7 @@ class Bot:
         self.liquids = Liquid.get_all(self.trove)
 
         self.throw_attempts = 0
+        self.last_throw_datetime = None  # keep track of the last throw datetime to prevent fake caught fish signals
         self.announced_thrown_liquid_type = False
 
     def get_liquid(self) -> Optional[Liquid]:
@@ -30,8 +31,9 @@ class Bot:
         # take action depending on scan result
         if not liquid:
             logging.info("Throwing the pole...")
-
+            self.last_throw_datetime = time.time()
             self.announced_thrown_liquid_type = False
+
             # inspect attempt counter
             if self.throw_attempts > 15:
                 raise Exception(
@@ -41,10 +43,19 @@ class Bot:
 
         # if we caught a fish
         elif liquid.caught_fish is True:
+            # trove implemented anti fish bot measures where they manipulate the "caught water type fish" pointer
+            # to 1 at the beginning of a throw. so, we need to wait a bit to make sure we caught a fish
+            if self.last_throw_datetime is not None and time.time() - self.last_throw_datetime < 5.5:
+                logging.debug(f"Received fake caught fish signal after {time.time() - self.last_throw_datetime:.2f} "
+                              f"seconds. Ignoring...")
+                time.sleep(0.2)
+                return
+
             logging.info(f"Caught a {liquid.name} type fish!")
 
             # reset counters
             self.throw_attempts = 0
+            self.last_throw_datetime = None
             self.announced_thrown_liquid_type = False
 
         # if the pole is thrown, we just inform and wait
