@@ -18,7 +18,7 @@ An advanced Trove Fishing bot that works in the background, written in Python.
 2) Start the game and position yourself in a place where you can throw the pole easily without having to aim precisely (towards any liquid).
 ![Example position](https://i.imgur.com/Tkp3cvT.png)
 
-3) Download the latest `.exe` from the [releases page](https://github.com/Midorina/TroveFishingBot/releases) and launch it.
+3) Download the latest `.exe` from the [releases page](https://github.com/Midorina/TroveFishingBot/releases) and launch it. **Releases may not be up-to-date with the source code. Running the bot from source code is highly recommended. Scroll down to learn how.**
 ![Example Bot Console](https://i.imgur.com/flBoqqY.png)
 
 There you go! The bot will start in a few seconds and start fishing for you.
